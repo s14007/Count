@@ -4,15 +4,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.util.Scanner;
 
 
 public class MyFrame extends JFrame {
     private int sum = 0;
+    private int sumAll = 0;
     public MyFrame() throws HeadlessException {
         createFrame();
     }
 
     public void createFrame() {
+        loadData();
         setName("Counter");
         setSize(200, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -30,7 +34,7 @@ public class MyFrame extends JFrame {
 
         JLabel label1 = new JLabel();
         label1.setFont(new Font("Century", Font.ITALIC, 20));
-        label1.setText("" + 0);
+        label1.setText("" + sum);
 
         subPanel.add(label);
         subPanel.add(label1);
@@ -51,12 +55,14 @@ public class MyFrame extends JFrame {
                 try {
                     sum = Integer.parseInt(jTextField.getText());
                     label1.setText("" + sum);
+                    saveData();
                 } catch (NumberFormatException ne) {
                     JLabel message = new JLabel("値が不正です。");
                     JOptionPane.showConfirmDialog(MyFrame.this, message);
                 }
             }
         });
+
 
         subPanel.add(jLabelCenter);
         subPanel.add(jTextField);
@@ -73,6 +79,7 @@ public class MyFrame extends JFrame {
                     public void actionPerformed(ActionEvent e) {
                         sum++;
                         label1.setText("" + sum);
+                        saveData();
                     }
                 });
                 panelButton.add(button);
@@ -89,6 +96,7 @@ public class MyFrame extends JFrame {
                     sum--;
                 }
                 label1.setText("" + sum);
+                saveData();
             }
         });
         panelButton.add(button1);
@@ -98,5 +106,27 @@ public class MyFrame extends JFrame {
         container.add(mainPanel);
 
         setVisible(true);
+    }
+
+    private void saveData() {
+        try {
+            File file = new File("C:\\Users\\Uta\\IdeaProjects\\Count\\data\\data.txt");
+            PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+            writer.println(sum);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadData() {
+        try {
+            File file = new File("C:\\Users\\Uta\\IdeaProjects\\Count\\data\\data.txt");
+            Scanner scan = new Scanner(file);
+            sum = scan.nextInt();
+            System.out.println(sum);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
